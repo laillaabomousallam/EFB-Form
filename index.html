@@ -12,8 +12,31 @@
       --accent-green: #006847; --accent-bright: #00ffaa; --text-white: #ffffff; --error-red: #ff4d4d;
     }
     body { background-color: var(--bg-color); font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; display: flex; flex-direction: column; min-height: 100vh; color: var(--text-white); }
-    .main-wrapper { flex: 1; display: flex; justify-content: center; align-items: center; padding: 40px 20px; }
-    .container { background-color: var(--container-color); width: 100%; max-width: 550px; border-radius: 15px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); box-sizing: border-box; }
+    .main-wrapper { flex: 1; display: flex; justify-content: center; align-items: center; padding: 20px 12px; }
+    .container { background-color: var(--container-color); width: 100%; max-width: 550px; border-radius: 15px; padding: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); box-sizing: border-box; }
+
+    @media (max-width: 400px) {
+      .container { padding: 15px; border-radius: 10px; }
+      h3 { font-size: 15px; }
+      label { font-size: 13px; }
+      input { padding: 10px; font-size: 13px; }
+      button { padding: 12px; font-size: 14px; }
+      .dd-trigger { padding: 10px 12px; font-size: 13px; }
+      .dd-option { padding: 10px 12px; font-size: 13px; }
+      #userCode { font-size: 18px; padding: 12px 8px; }
+      #statusTitle { font-size: 20px; }
+      .footer-strip { padding: 30px 5% 20px 5%; }
+      .footer-brand { min-width: unset; }
+      .footer-contact { min-width: unset; }
+      .social-links a { font-size: 18px; }
+    }
+    @media (max-width: 320px) {
+      .container { padding: 12px; }
+      h3 { font-size: 14px; }
+      button { padding: 10px; font-size: 13px; }
+      #userCode { font-size: 16px; }
+    }
+
     .progress-container { margin-bottom: 30px; display: flex; justify-content: space-between; position: relative; }
     .progress-bar { position: absolute; top: 50%; left: 0; height: 2px; background: #444; width: 100%; z-index: 1; transform: translateY(-50%); }
     .progress-fill { position: absolute; top: 50%; left: 0; height: 2px; background: var(--accent-green); width: 0%; z-index: 2; transition: 0.3s; transform: translateY(-50%); }
@@ -38,7 +61,6 @@
     .btn-prev { background-color: #444; color: white; }
     .hidden { display: none; }
 
-    /* Custom Dropdown */
     .dd-wrapper { position: relative; margin-top: 8px; }
     .dd-trigger { width: 100%; box-sizing: border-box; padding: 12px 14px; border: 1px solid #444; border-radius: 8px; background-color: var(--input-bg); color: white; font-size: 14px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: background-color 0.2s, border-color 0.2s; }
     .dd-trigger:hover { background-color: var(--accent-green); border-color: var(--accent-green); }
@@ -60,7 +82,6 @@
     .footer-brand { flex: 1; min-width: 300px; }
     .footer-logo-box { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; }
     .footer-logo-box img { height: 60px; }
-    .footer-logo-box .brand-text { font-size: 22px; font-weight: bold; line-height: 1.2; }
     .brand-description { font-size: 14px; color: #ccc; line-height: 1.6; max-width: 450px; text-align: left; }
     .footer-contact { flex: 1; min-width: 250px; }
     .footer-contact h4 { margin: 0 0 15px 0; font-size: 18px; }
@@ -72,6 +93,11 @@
     .social-links a:hover { opacity: 1; transform: translateY(-3px); }
     #userCode { background: #333; padding: 15px 10px; border-radius: 8px; border: 2px dashed #00ffaa; color: #00ffaa; margin: 20px 0; font-size: 22px; font-weight: bold; text-align: center; letter-spacing: 1px; white-space: nowrap; overflow: hidden; }
     #statusTitle { font-size: 24px; margin-bottom: 10px; color: #00ffaa; }
+    .age-gender-row { display: flex; gap: 10px; }
+    .age-gender-row > div { flex: 1; display: flex; flex-direction: column; }
+    .age-gender-row input, .age-gender-row .dd-wrapper { flex: 1; }
+    .age-gender-row .dd-wrapper { margin-top: 8px; }
+    .age-gender-row .dd-trigger { height: 100%; box-sizing: border-box; }
   </style>
 </head>
 <body>
@@ -81,7 +107,6 @@
     <div class="header-logo">
       <img src="https://drive.google.com/thumbnail?id=13qjqwYdOgv0D2vx93pVrFcyeAIwT2IYP&sz=w1000" alt="Logo">
     </div>
-
     <div class="progress-container">
       <div class="progress-bar"></div>
       <div class="progress-fill" id="progressFill"></div>
@@ -96,15 +121,15 @@
       <!-- Step 1 -->
       <div class="form-step active">
         <h3>Basic Information | البيانات الأساسية</h3>
-        <label>Full Name <span style="color:red">*</span> | الأسمم بالكامل</label>
+        <label>Full Name <span style="color:red">*</span> | الأسم بالكامل</label>
         <input type="text" name="name" data-required="true">
         <div class="error-text">Required | مطلوب</div>
-        <div style="display: flex; gap: 10px;">
-          <div style="flex: 1;">
+        <div class="age-gender-row">
+          <div>
             <label>Age <span style="color:red">*</span> | السن</label>
             <input type="number" name="age" data-required="true">
           </div>
-          <div style="flex: 1;">
+          <div>
             <label>Gender <span style="color:red">*</span> | النوع</label>
             <div class="dd-wrapper" data-name="gender" data-required="true">
               <div class="dd-trigger placeholder"><span class="dd-label">Select | اختر</span><i class="ti ti-chevron-down"></i></div>
@@ -121,7 +146,7 @@
         <div class="error-text">Must be 11 digits | يجب إدخال ١١ رقم</div>
         <label>Email Address <span style="color:red">*</span> | البريد الإلكتروني</label>
         <input type="email" name="email" id="emailInput" data-required="true">
-        <div class="error-text">Email must be like:  name@example.com | يجب أن ينتهي البريد بـ </div>
+        <div class="error-text">Email must be like: name@example.com | يجب أن ينتهي البريد بـ </div>
         <div class="btn-group">
           <button type="button" class="btn-next" onclick="nextStep(1)">Next | التالي</button>
         </div>
@@ -139,23 +164,17 @@
             <div class="dd-option" data-value="Foreigner">Foreigner | أجنبي</div>
           </div>
         </div>
-
-        <!-- حقول المصريين فقط (الرقم القومي) -->
         <div id="egyptianFields" class="hidden">
           <label>National ID <span style="color:red">*</span> | الرقم القومي</label>
           <input type="text" name="idNumber" id="idInput" maxlength="14" data-required="true">
           <div class="error-text">Must be 14 digits | يجب أن يكون 14 رقم</div>
         </div>
-
-        <!-- حقول الأجانب فقط (الدولة + جواز السفر) -->
         <div id="foreignFields" class="hidden">
           <label>Country <span style="color:red">*</span> | الدولة</label>
           <input type="text" name="country" data-required="true">
           <label>ID/Passport <span style="color:red">*</span> | رقم الهوية/جواز السفر</label>
           <input type="text" name="passportId" data-required="true">
         </div>
-
-        <!-- المحافظة — تظهر للمصريين والأجانب بعد اختيار الجنسية -->
         <div id="governorateField" class="hidden">
           <label>Governorate <span style="color:red">*</span> | المحافظة</label>
           <div class="dd-wrapper" data-name="governorate" data-required="true">
@@ -192,13 +211,10 @@
             </div>
           </div>
         </div>
-
-        <!-- منطقة السكن — تظهر بعد اختيار الجنسية فقط -->
         <div id="areaField" class="hidden">
           <label>Detailed Area <span style="color:red">*</span> | منطقة السكن بالتفصيل</label>
           <input type="text" name="area" data-required="true">
         </div>
-
         <div class="btn-group">
           <button type="button" class="btn-prev" onclick="prevStep(0)">Back | سابق</button>
           <button type="button" class="btn-next" onclick="nextStep(2)">Next | التالي</button>
@@ -220,7 +236,6 @@
             <div class="dd-option" data-value="Youth Center">Youth entity | كيان شبابي</div>
           </div>
         </div>
-
         <div id="entityField" class="hidden">
           <label>Entity Name <span style="color:red">*</span> | اسم الجهة</label>
           <div class="dd-wrapper" data-name="entityName" id="entityDropdown" data-required="true">
@@ -228,7 +243,6 @@
             <div class="dd-panel"></div>
           </div>
         </div>
-
         <div class="btn-group">
           <button type="button" class="btn-prev" onclick="prevStep(1)">Back | سابق</button>
           <button type="button" class="btn-next" onclick="nextStep(3)">Next | التالي</button>
@@ -259,19 +273,19 @@
     <div id="statusTitle">Success | تم التسجيل بنجاح</div>
     <p id="statusSubText">Your ID | كود التطوع الخاص بك:</p>
     <div id="userCode"></div>
-  <p id="qrLabel" style="display:none; margin:15px 0 5px 0; font-size:14px; color:#ccc;">رمز الـ QR الخاص بك، يرجى الاحتفاظ بصورة الـ QR</p>
-  <img id="userQr" src="" crossorigin="anonymous" style="display:none; width:200px; border-radius:8px; margin:10px auto; box-shadow:0 2px 8px rgba(0,0,0,0.12);">
-  <button type="button" id="downloadQrBtn" onclick="downloadQrCard()" style="display:none; background:#333; color:#00ffaa; border:1px solid #00ffaa; padding:10px 18px; border-radius:30px; font-weight:bold; font-size:13px; cursor:pointer; margin:12px auto 0 auto; width:fit-content;">
-    <i class="fas fa-download" style="margin-left:6px;"></i>تحميل صورة الـ QR
-  </button>
-  <div style="clear:both;"></div>
+    <p id="qrLabel" style="display:none; margin:15px 0 5px 0; font-size:14px; color:#ccc;">رمز الـ QR الخاص بك، يرجى الاحتفاظ بصورة الـ QR</p>
+    <img id="userQr" src="" crossorigin="anonymous" style="display:none; width:200px; border-radius:8px; margin:10px auto; box-shadow:0 2px 8px rgba(0,0,0,0.12);">
+    <button type="button" id="downloadQrBtn" onclick="downloadQrCard()" style="display:none; background:#333; color:#00ffaa; border:1px solid #00ffaa; padding:10px 18px; border-radius:30px; font-weight:bold; font-size:13px; cursor:pointer; margin:12px auto 0 auto; width:fit-content;">
+      <i class="fas fa-download" style="margin-left:6px;"></i>تحميل صورة الـ QR
+    </button>
+    <div style="clear:both;"></div>
     <div id="whatsappWrapper" dir="rtl" style="display:none; flex-direction:column; align-items:center; margin-top:18px;">
       <a id="whatsappBtn" href="#" target="_blank" style="display:flex; align-items:center; justify-content:center; gap:8px; background:#006847; color:white; padding:12px 20px; text-decoration:none; border-radius:30px; font-weight:bold; text-align:center; font-size:14px; max-width:300px; box-shadow:0 4px 10px rgba(0,104,71,0.35); transition:0.2s;">
-        <span>لينك جروب الواتساب </span>
+        <span>لينك جروب الواتساب</span>
         <i class="fab fa-whatsapp" style="font-size:16px;"></i>
       </a>
       <p style="font-size:12px; color:#ccc; max-width:320px; margin-top:10px; line-height:1.5;">انضم إلى جروب الواتساب الخاص بمتطوعين بنك الطعام المصري لمعرفة تفاصيل التطوع والمشاركة في البرامج التطوعية</p>
-    </div> 
+    </div>
     <button onclick="location.reload()" class="btn-next" style="margin-top:20px;">New Registration | تسجيل جديد</button>
   </div>
 </div>
@@ -305,32 +319,59 @@
 </footer>
 
 <script>
-  var SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwA7qfDan2WdT93bgbiV_CqaA0J8dRo4nZgz9ACm5JdbOetsucDeJv27pywdlBVT4tqmQ/exec";
+  var SCRIPT_URL = "https://script.google.com/macros/library/d/1IzwdbuHpxYJrGt7sz08gufvYW8Puvx8WS2MMl_3-1tep8FBO5jiypNK3/26";
 
   let currentStep = 0;
   const steps = document.querySelectorAll(".form-step");
   const circles = document.querySelectorAll(".step-circle");
+  var formLists = {};
 
   // ============================
-  // Custom Dropdown engine
+  // تحميل القوائم عن طريق fetch() عادي (بدل الـ JSONP القديمة اللي كانت مش مضمونة على متصفحات الموبايل)
+  // ============================
+  async function loadLists() {
+    try {
+      const res = await fetch(SCRIPT_URL, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify({ action: "getLists" })
+      });
+      const data = await res.json();
+      formLists = data;
+      fillProgramList();
+    } catch (err) {
+      setTimeout(loadLists, 3000);
+    }
+  }
+
+  loadLists();
+
+  function fillProgramList() {
+    var wrapper = document.getElementById('programDropdown');
+    var programs = formLists["Volunteer Program"] || [];
+    var items = programs.map(function(p) { return { value: p, label: p }; });
+    items.push({
+      value: "لم اتطوع مع بنك الطعام من قبل",
+      label: "I have never volunteered with the Egyptian Food Bank before | لم اتطوع مع بنك الطعام من قبل"
+    });
+    ddRebuild(wrapper, items, true, "Select | اختر");
+  }
+
+  // ============================
+  // Dropdown
   // ============================
   function ddSetValue(wrapper, value, label) {
     wrapper.dataset.value = value;
-    var labelEl = wrapper.querySelector('.dd-label');
-    labelEl.textContent = label;
-    var trigger = wrapper.querySelector('.dd-trigger');
-    trigger.classList.toggle('placeholder', !value);
-
+    wrapper.querySelector('.dd-label').textContent = label;
+    wrapper.querySelector('.dd-trigger').classList.toggle('placeholder', !value);
     wrapper.querySelectorAll('.dd-option').forEach(function(opt) {
       opt.classList.toggle('selected', opt.dataset.value === value && value !== '');
     });
-
     wrapper.classList.remove('error-border');
     var err = wrapper.parentElement.querySelector('.error-text');
     if (err) err.style.display = 'none';
-
-    var onchangeFn = wrapper.dataset.onchange;
-    if (onchangeFn && window[onchangeFn]) window[onchangeFn](value);
+    var fn = wrapper.dataset.onchange;
+    if (fn && window[fn]) window[fn](value);
   }
 
   function ddBuildOptions(wrapper) {
@@ -361,12 +402,11 @@
       panel.appendChild(opt);
     });
     ddBuildOptions(wrapper);
-    ddSetValue(wrapper, '', wrapper.querySelector('.dd-trigger').classList.contains('placeholder') ? wrapper.querySelector('.dd-label').textContent : '');
+    ddSetValue(wrapper, '', '');
   }
 
   document.querySelectorAll('.dd-wrapper').forEach(function(wrapper) {
-    var trigger = wrapper.querySelector('.dd-trigger');
-    trigger.addEventListener('click', function(e) {
+    wrapper.querySelector('.dd-trigger').addEventListener('click', function(e) {
       e.stopPropagation();
       var wasOpen = wrapper.classList.contains('open');
       document.querySelectorAll('.dd-wrapper.open').forEach(function(w) { w.classList.remove('open'); });
@@ -381,45 +421,10 @@
   });
 
   // ============================
-  // جلب القوائم من الشيت عند تحميل الصفحة
-  // ============================
-  var formLists = {};
-
-  (function loadLists() {
-    var callbackName = "listsCallback_" + Date.now();
-
-    window[callbackName] = function(data) {
-      formLists = data;
-      delete window[callbackName];
-      document.head.removeChild(script);
-      fillProgramList();
-    };
-
-    var script = document.createElement('script');
-    script.src = SCRIPT_URL + "?action=getLists&callback=" + callbackName;
-    document.head.appendChild(script);
-  })();
-
-  // ============================
-  // ملي قائمة البرامج
-  // ============================
-  function fillProgramList() {
-    var wrapper = document.getElementById('programDropdown');
-    var programs = formLists["Volunteer Program"] || [];
-    var items = programs.map(function(p) { return { value: p, label: p }; });
-    items.push({
-      value: "لم اتطوع مع بنك الطعام من قبل",
-      label: "I have never volunteered with the Egyptian Food Bank before | لم اتطوع مع بنك الطعام من قبل"
-    });    ddRebuild(wrapper, items, true, "Select | اختر");
-  }
-
-  // ============================
   // Validation
   // ============================
   function normalizeDigits(str) {
-    return str.replace(/[٠-٩]/g, function(d) {
-      return d.charCodeAt(0) - 1632;
-    });
+    return str.replace(/[٠-٩]/g, function(d) { return d.charCodeAt(0) - 1632; });
   }
 
   function validateEmail(email) {
@@ -429,22 +434,14 @@
   function nextStep(stepIdx) {
     const activeStep = steps[currentStep];
     let isValid = true;
-
-    var inputs = activeStep.querySelectorAll("input[data-required='true']");
-    inputs.forEach(function(input) {
-      if (input.getAttribute('data-required') === 'false') return;
-      // تجاهل الحقول المخفية
-      if (input.closest('.hidden')) return;
+    activeStep.querySelectorAll("input[data-required='true']").forEach(function(input) {
+      if (input.getAttribute('data-required') === 'false' || input.closest('.hidden')) return;
       let fieldValid = true;
-      var normalizedValue = normalizeDigits(input.value.trim());
-      if (!normalizedValue) fieldValid = false;
-      if (input.id === 'phoneInput' && (normalizedValue.length !== 11 || !normalizedValue.startsWith('01'))) fieldValid = false;
+      var val = normalizeDigits(input.value.trim());
+      if (!val) fieldValid = false;
+      if (input.id === 'phoneInput' && (val.length !== 11 || !val.startsWith('01'))) fieldValid = false;
       if (input.id === 'emailInput' && !validateEmail(input.value)) fieldValid = false;
-      if (input.name === 'idNumber') {
-    if (normalizedValue.length !== 14 || !/^\d+$/.test(normalizedValue)) {
-        fieldValid = false;
-    }
-}
+      if (input.name === 'idNumber' && (val.length !== 14 || !/^\d+$/.test(val))) fieldValid = false;
       const error = input.nextElementSibling;
       if (!fieldValid) {
         input.classList.add('error-border');
@@ -455,22 +452,11 @@
         if (error && error.classList.contains('error-text')) error.style.display = 'none';
       }
     });
-
-    var dropdowns = activeStep.querySelectorAll(".dd-wrapper[data-required='true']");
-    dropdowns.forEach(function(wrapper) {
+    activeStep.querySelectorAll(".dd-wrapper[data-required='true']").forEach(function(wrapper) {
       if (wrapper.offsetParent === null) return;
-      if (!wrapper.dataset.value) {
-        wrapper.classList.add('error-border');
-        var err = wrapper.parentElement.querySelector('.error-text');
-        if (err) err.style.display = 'block';
-        isValid = false;
-      } else {
-        wrapper.classList.remove('error-border');
-        var err2 = wrapper.parentElement.querySelector('.error-text');
-        if (err2) err2.style.display = 'none';
-      }
+      if (!wrapper.dataset.value) { wrapper.classList.add('error-border'); isValid = false; }
+      else wrapper.classList.remove('error-border');
     });
-
     if (!isValid) return;
     steps[currentStep].classList.remove("active");
     currentStep = stepIdx;
@@ -479,248 +465,180 @@
   }
 
   function prevStep(stepIdx) {
-    if (steps[stepIdx]) {
-      steps[currentStep].classList.remove("active");
-      currentStep = stepIdx;
-      steps[currentStep].classList.add("active");
-      updateProgress();
-    }
+    steps[currentStep].classList.remove("active");
+    currentStep = stepIdx;
+    steps[currentStep].classList.add("active");
+    updateProgress();
   }
 
   function updateProgress() {
-    circles.forEach(function(c, i) {
-      c.classList.toggle("active", i <= currentStep);
-    });
+    circles.forEach(function(c, i) { c.classList.toggle("active", i <= currentStep); });
     document.getElementById("progressFill").style.width = (currentStep / 3) * 100 + "%";
   }
 
-  // ============================
-  // toggleNationality
-  // المحافظة ومنطقة السكن يظهران بعد اختيار الجنسية
-  // ============================
   function toggleNationality(val) {
-    // حقول المصريين
     document.getElementById('egyptianFields').classList.toggle('hidden', val !== 'Egyptian');
-    // حقول الأجانب
     document.getElementById('foreignFields').classList.toggle('hidden', val !== 'Foreigner');
-    // المحافظة ومنطقة السكن — للاتنين بعد الاختيار
     document.getElementById('governorateField').classList.toggle('hidden', !val);
     document.getElementById('areaField').classList.toggle('hidden', !val);
-
-    // required logic
     document.getElementById('idInput').setAttribute('data-required', val === 'Egyptian' ? 'true' : 'false');
-
-    var countryInput = document.querySelector('input[name="country"]');
-    var passportInput = document.querySelector('input[name="passportId"]');
-    if (countryInput) countryInput.setAttribute('data-required', val === 'Foreigner' ? 'true' : 'false');
-    if (passportInput) passportInput.setAttribute('data-required', val === 'Foreigner' ? 'true' : 'false');
-
-    // reset المحافظة لو غيّر الجنسية
-    var govWrapper = document.querySelector('#governorateField .dd-wrapper');
-    if (govWrapper) {
-      ddSetValue(govWrapper, '', 'Select Governorate | اختر المحافظة');
-      govWrapper.querySelector('.dd-trigger').classList.add('placeholder');
-    }
+    var c = document.querySelector('input[name="country"]');
+    var p = document.querySelector('input[name="passportId"]');
+    if (c) c.setAttribute('data-required', val === 'Foreigner' ? 'true' : 'false');
+    if (p) p.setAttribute('data-required', val === 'Foreigner' ? 'true' : 'false');
+    var gw = document.querySelector('#governorateField .dd-wrapper');
+    if (gw) { ddSetValue(gw, '', 'Select Governorate | اختر المحافظة'); gw.querySelector('.dd-trigger').classList.add('placeholder'); }
   }
 
-  // ============================
-  // toggleEntity
-  // ============================
   function toggleEntity(val) {
     var div = document.getElementById('entityField');
     var wrapper = document.getElementById('entityDropdown');
-
-    if (val === 'Individual' || !val) {
-      div.classList.add('hidden');
-      wrapper.setAttribute('data-required', 'false');
-      return;
-    }
-
+    if (val === 'Individual' || !val) { div.classList.add('hidden'); wrapper.setAttribute('data-required', 'false'); return; }
     div.classList.remove('hidden');
     wrapper.setAttribute('data-required', 'true');
-
-    var keyMap = {
-      "Company": "Company",
-      "School": "School",
-      "University": "University",
-      "Youth Center": "Youth Center"
-    };
-
-    var items = formLists[keyMap[val]] || [];
-
-    if (items.length === 0) {
-      ddRebuild(wrapper, [], true, "لا توجد بيانات حالياً");
-      return;
-    }
-
-    var optItems = items.map(function(item) { return { value: item, label: item }; });
-    ddRebuild(wrapper, optItems, true, "Select | اختر");
+    var keyMap = { "Company": "Company", "School": "School", "University": "University", "Youth Center": "Youth Center" };
+    var items = (formLists[keyMap[val]] || []).map(function(item) { return { value: item, label: item }; });
+    ddRebuild(wrapper, items, true, items.length === 0 ? "لا توجد بيانات حالياً" : "Select | اختر");
   }
 
   // ============================
-  // Submit — JSONP
+  // Submit عن طريق fetch() عادي (بدل الـ JSONP القديمة اللي كانت مش مضمونة على متصفحات الموبايل)
   // ============================
-  document.getElementById('volunteerForm').onsubmit = function(e) {
+  function showSubmitError() {
+    document.getElementById('formContainer').classList.add('hidden');
+    document.getElementById('successMessage').classList.remove('hidden');
+    document.getElementById('statusTitle').style.color = '#ff4d4d';
+    document.getElementById('statusTitle').innerText = 'فشل الإرسال | Delivery Failed';
+    document.getElementById('statusSubText').innerText = '';
+    document.getElementById('userCode').style.borderColor = '#ff4d4d';
+    document.getElementById('userCode').style.color = '#ff4d4d';
+    document.getElementById('userCode').style.fontSize = '14px';
+    document.getElementById('userCode').innerText = 'البريد الإلكتروني غير صحيح أو ممتلئ\nThe email address is invalid or full\n\nتواصل معنا: efb.volunteer@gmail.com';
+  }
+
+  function handleSubmitResult(res) {
+    document.getElementById('formContainer').classList.add('hidden');
+    document.getElementById('successMessage').classList.remove('hidden');
+
+    if (res.code && res.code.toString().startsWith('EXISTING:')) {
+      var existingCode = res.code.toString().replace('EXISTING:', '');
+      document.getElementById('statusTitle').style.color = '#FFD700';
+      document.getElementById('statusTitle').style.fontWeight = 'bold';
+      document.getElementById('statusTitle').innerText = 'لقد قمت بالتسجيل من قبل';
+      document.getElementById('statusSubText').style.color = '#ffffff';
+      document.getElementById('statusSubText').style.fontWeight = 'bold';
+      document.getElementById('statusSubText').innerText = 'Your ID | كود التطوع الخاص بك:';
+      document.getElementById('userCode').style.color = '#FFD700';
+      document.getElementById('userCode').style.borderColor = '#FFD700';
+      document.getElementById('userCode').innerText = existingCode;
+    } else if (res.error) {
+      document.getElementById('statusTitle').style.color = '#ff4d4d';
+      document.getElementById('statusTitle').innerText = 'فشل التسجيل | Error';
+      document.getElementById('statusSubText').innerText = '';
+      document.getElementById('userCode').style.borderColor = '#ff4d4d';
+      document.getElementById('userCode').style.color = '#ff4d4d';
+      document.getElementById('userCode').innerText = 'حصل خطأ، حاول تاني أو تواصل معنا';
+    } else {
+      document.getElementById('statusTitle').innerText = 'Success | تم التسجيل بنجاح';
+      document.getElementById('userCode').innerText = res.code;
+      if (res.qrUrl) {
+        var qrImg = document.getElementById('userQr');
+        qrImg.src = res.qrUrl;
+        qrImg.style.display = 'block';
+        document.getElementById('qrLabel').style.display = 'block';
+        document.getElementById('downloadQrBtn').style.display = 'inline-block';
+      }
+      if (res.whatsappLink) {
+        document.getElementById('whatsappBtn').href = res.whatsappLink;
+        document.getElementById('whatsappWrapper').style.display = 'flex';
+      }
+    }
+  }
+
+  document.getElementById('volunteerForm').onsubmit = async function(e) {
     e.preventDefault();
     const btn = document.getElementById('submitBtn');
     btn.disabled = true;
     btn.innerText = "جاري التسجيل...";
 
-    const formData = new FormData(this);
     const data = {};
-    formData.forEach(function(v, k) { data[k] = v; });
-
+    new FormData(this).forEach(function(v, k) { data[k] = v; });
     document.querySelectorAll('.dd-wrapper').forEach(function(wrapper) {
       data[wrapper.dataset.name] = wrapper.dataset.value || "";
     });
 
-    const params = new URLSearchParams(data).toString();
-    const callbackName = "efbCallback_" + Date.now();
-
-    window[callbackName] = function(res) {
-      delete window[callbackName];
-      document.head.removeChild(script);
-
-      document.getElementById('formContainer').classList.add('hidden');
-      document.getElementById('successMessage').classList.remove('hidden');
-
-      if (res.code && res.code.toString().startsWith('EXISTING:')) {
-        var existingCode = res.code.toString().replace('EXISTING:', '');
-        document.getElementById('statusTitle').style.color = '#FFD700';
-        document.getElementById('statusTitle').style.fontWeight = 'bold';
-        document.getElementById('statusTitle').innerText = 'لقد قمت بالتسجيل من قبل';
-        document.getElementById('statusSubText').style.color = '#ffffff';
-        document.getElementById('statusSubText').style.fontWeight = 'bold';
-        document.getElementById('statusSubText').innerText = 'Your ID | كود التطوع الخاص بك:';
-        document.getElementById('userCode').style.color = '#FFD700';
-        document.getElementById('userCode').style.borderColor = '#FFD700';
-        document.getElementById('userCode').innerText = existingCode;
-     } else if (res.error) {
-        document.getElementById('statusTitle').style.color = '#ff4d4d';
-        document.getElementById('statusTitle').innerText = 'فشل التسجيل | Error';
-        document.getElementById('statusSubText').innerText = '';
-        document.getElementById('userCode').style.borderColor = '#ff4d4d';
-        document.getElementById('userCode').style.color = '#ff4d4d';
-        document.getElementById('userCode').innerText = 'حصل خطأ، حاول تاني أو تواصل معنا';
-      } else {
-        document.getElementById('statusTitle').innerText = 'Success | تم التسجيل بنجاح';
-        document.getElementById('userCode').innerText = res.code;
-      if (res.qrUrl) {
-          var qrImg = document.getElementById('userQr');
-          qrImg.src = res.qrUrl;
-          qrImg.style.display = 'block';
-          document.getElementById('qrLabel').style.display = 'block';
-          document.getElementById('downloadQrBtn').style.display = 'inline-block';
-        }
-      if (res.whatsappLink) {
-          var waBtn = document.getElementById('whatsappBtn');
-          waBtn.href = res.whatsappLink;
-          document.getElementById('whatsappWrapper').style.display = 'flex';
-        }
-      }
-    };
-
-    const script = document.createElement('script');
-    script.onerror = function() {
-      alert("حدث خطأ أثناء التسجيل.");
+    try {
+      const res = await fetch(SCRIPT_URL, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify(data)
+      });
+      const result = await res.json();
+      handleSubmitResult(result);
+    } catch (err) {
+      showSubmitError();
       btn.disabled = false;
       btn.innerText = "تسجيل | Submit";
-    };
-   script.src = SCRIPT_URL + "?" + params + "&callback=" + callbackName;
-    document.head.appendChild(script);
+    }
   };
 
   // ============================
-  // تحميل صورة الكود + الـ QR
-  // ============================
-  // ============================
-  // تحميل صورة الكود + الـ QR
+  // تحميل صورة الـ QR
   // ============================
   function downloadQrCard() {
     var code = document.getElementById('userCode').innerText;
     var qrImg = document.getElementById('userQr');
-
     var canvas = document.createElement('canvas');
-    var width = 400;
-    var height = 520;
-    canvas.width = width;
-    canvas.height = height;
+    var width = 400, height = 520;
+    canvas.width = width; canvas.height = height;
     var ctx = canvas.getContext('2d');
-
-    // خلفية الكارت
     ctx.fillStyle = '#252525';
     ctx.fillRect(0, 0, width, height);
+    var qrSize = 260, qrX = (width - qrSize) / 2, qrY = 170;
 
-    // عنوان
-    ctx.fillStyle = '#00ffaa';
-    ctx.font = 'bold 22px Arial';
-    ctx.textAlign = 'center';
-    ctx.fillText('EFB Volunteer', width / 2, 50);
-
-    // إطار الكود
-    ctx.strokeStyle = '#00ffaa';
-    ctx.setLineDash([6, 4]);
-    ctx.lineWidth = 2;
-    ctx.strokeRect(30, 80, width - 60, 60);
-    ctx.setLineDash([]);
-
-    // نص الكود
-    ctx.fillStyle = '#00ffaa';
-    ctx.font = 'bold 26px Arial';
-    ctx.fillText(code, width / 2, 118);
-
-    // رسم الـ QR
-    var qrSize = 260;
-    var qrX = (width - qrSize) / 2;
-    var qrY = 170;
-
-    function shareOrDownload() {
-      canvas.toBlob(function(blob) {
-        var fileName = code + '_QR.png';
-        var file = new File([blob], fileName, { type: 'image/png' });
-
-        // لو المتصفح بيدعم مشاركة الملفات (الموبايل غالباً)
-        if (navigator.canShare && navigator.canShare({ files: [file] })) {
-          navigator.share({
-            files: [file],
-            title: fileName
-          }).catch(function(err) {
-            // لو المستخدم لغى المشاركة مفيش داعي لرسالة خطأ
-            if (err.name !== 'AbortError') {
-              fallbackDownload(blob, fileName);
-            }
-          });
-        } else {
-          // فولباك للكمبيوتر أو المتصفحات اللي مش بتدعم المشاركة
-          fallbackDownload(blob, fileName);
-        }
-      }, 'image/png'); 
-    }
-
-    function fallbackDownload(blob, fileName) {
-      var url = URL.createObjectURL(blob);
-      var link = document.createElement('a');
-      link.download = fileName;
-      link.href = url;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      setTimeout(function() { URL.revokeObjectURL(url); }, 1000);
-    }
-
-    var tempImg = new Image();
-    tempImg.crossOrigin = 'anonymous';
-    tempImg.onload = function() {
-      // خلفية بيضاء خلف الـ QR
+    function continueDrawing() {
+      var name = document.querySelector('input[name="name"]') ? document.querySelector('input[name="name"]').value.trim() : '';
+      ctx.textAlign = 'center';
       ctx.fillStyle = '#ffffff';
-      ctx.fillRect(qrX - 10, qrY - 10, qrSize + 20, qrSize + 20);
-      ctx.drawImage(tempImg, qrX, qrY, qrSize, qrSize);
-      shareOrDownload();
+      ctx.font = 'bold 18px Arial';
+      ctx.fillText(name, width / 2, 82);
+      ctx.strokeStyle = '#00ffaa';
+      ctx.setLineDash([6, 4]);
+      ctx.lineWidth = 2;
+      ctx.strokeRect(30, 98, width - 60, 50);
+      ctx.setLineDash([]);
+      ctx.fillStyle = '#00ffaa';
+      ctx.font = 'bold 24px Arial';
+      ctx.fillText(code, width / 2, 130);
+      var tempImg = new Image();
+      tempImg.crossOrigin = 'anonymous';
+      tempImg.onload = function() {
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(qrX - 10, qrY - 10, qrSize + 20, qrSize + 20);
+        ctx.drawImage(tempImg, qrX, qrY, qrSize, qrSize);
+        var link = document.createElement('a');
+        link.download = code + '_QR.png';
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+      };
+      tempImg.onerror = function() { alert('حدث خطأ أثناء تجهيز الصورة، حاولي تاني.'); };
+      tempImg.src = qrImg.src;
+    }
+
+    var logo = new Image();
+    logo.onload = function() {
+      var lh = 55, lw = logo.naturalWidth * (lh / logo.naturalHeight);
+      ctx.drawImage(logo, 15, 10, lw, lh);
+      continueDrawing();
     };
-    tempImg.onerror = function() {
-      alert('حدث خطأ أثناء تجهيز الصورة، حاولي تاني.');
+    logo.onerror = function() {
+      ctx.fillStyle = '#00ffaa';
+      ctx.font = 'bold 22px Arial';
+      ctx.textAlign = 'center';
+      ctx.fillText('EFB Volunteer', width / 2, 45);
+      continueDrawing();
     };
-    tempImg.src = qrImg.src;
+    logo.src = 'efb-logo.png';
   }
 </script>
 </body>
