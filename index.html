@@ -121,7 +121,7 @@
       <!-- Step 1 -->
       <div class="form-step active">
         <h3>Basic Information | البيانات الأساسية</h3>
-        <label>Full Name <span style="color:red">*</span> | الأسم بالكامل</label>
+        <label>Full Name <span style="color:red">*</span> | الأسمم بالكامل</label>
         <input type="text" name="name" data-required="true">
         <div class="error-text">Required | مطلوب</div>
         <div class="age-gender-row">
@@ -329,19 +329,58 @@
   // ============================
   // تحميل القوائم عن طريق fetch() عادي (بدل الـ JSONP القديمة اللي كانت مش مضمونة على متصفحات الموبايل)
   // ============================
+  var loadListsAttempts = 0;
+
   async function loadLists() {
+    loadListsAttempts++;
     try {
       const res = await fetch(SCRIPT_URL, {
         method: "POST",
         headers: { "Content-Type": "text/plain;charset=utf-8" },
         body: JSON.stringify({ action: "getLists" })
       });
+      if (!res.ok) throw new Error("HTTP " + res.status);
       const data = await res.json();
       formLists = data;
       fillProgramList();
+      hideListsError();
     } catch (err) {
-      setTimeout(loadLists, 3000);
+      if (loadListsAttempts < 4) {
+        setTimeout(loadLists, 3000);
+      } else {
+        showListsError(err && err.message ? err.message : String(err));
+      }
     }
+  }
+
+  function showListsError(message) {
+    var wrapper = document.getElementById('programDropdown');
+    if (!wrapper) return;
+    var box = document.getElementById('listsErrorBox');
+    if (!box) {
+      box = document.createElement('div');
+      box.id = 'listsErrorBox';
+      box.style.cssText = 'margin-top:8px; padding:10px 12px; border:1px solid var(--error-red); border-radius:8px; background:rgba(255,77,77,0.08); font-size:12px; color:var(--error-red);';
+      wrapper.parentNode.insertBefore(box, wrapper);
+    }
+    box.innerHTML = '';
+    var text = document.createElement('div');
+    text.textContent = 'تعذر تحميل بيانات البرامج من الشيت. تأكد من اتصال الإنترنت وحاول تاني | Failed to load program data (' + message + ')';
+    box.appendChild(text);
+    var retryBtn = document.createElement('button');
+    retryBtn.type = 'button';
+    retryBtn.textContent = 'إعادة المحاولة | Retry';
+    retryBtn.style.cssText = 'margin-top:8px; padding:8px 14px; border-radius:6px; border:1px solid var(--error-red); background:transparent; color:var(--error-red); font-size:12px; cursor:pointer;';
+    retryBtn.onclick = function() {
+      loadListsAttempts = 0;
+      loadLists();
+    };
+    box.appendChild(retryBtn);
+  }
+
+  function hideListsError() {
+    var box = document.getElementById('listsErrorBox');
+    if (box) box.remove();
   }
 
   loadLists();
