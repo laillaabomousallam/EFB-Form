@@ -633,7 +633,6 @@
         break;
       } catch (err) {
         if (attempt < maxAttempts) {
-          btn.innerText = "بنحاول تاني... (" + (attempt + 1) + "/" + maxAttempts + ")";
           await new Promise(function(r) { setTimeout(r, 2000); });
           continue;
         }
