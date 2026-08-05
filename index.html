@@ -327,27 +327,21 @@
   var formLists = {};
 
   // ============================
-  // تحميل القوائم (بدون أي مهلة زمنية مصطنعة — بينتظر الرد الحقيقي من السيرفر مهما طال، ويعيد المحاولة فقط لو حصل خطأ شبكة فعلي)
+  // تحميل القوائم عن طريق fetch() عادي (بدل الـ JSONP القديمة اللي كانت مش مضمونة على متصفحات الموبايل)
   // ============================
-  function loadLists() {
-    var callbackName = "listsCallback_" + Date.now();
-    var script = document.createElement('script');
-
-    window[callbackName] = function(data) {
+  async function loadLists() {
+    try {
+      const res = await fetch(SCRIPT_URL, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify({ action: "getLists" })
+      });
+      const data = await res.json();
       formLists = data;
-      delete window[callbackName];
-      if (document.head.contains(script)) document.head.removeChild(script);
       fillProgramList();
-    };
-
-    script.onerror = function() {
-      delete window[callbackName];
-      if (document.head.contains(script)) document.head.removeChild(script);
+    } catch (err) {
       setTimeout(loadLists, 3000);
-    };
-
-    script.src = SCRIPT_URL + "?action=getLists&callback=" + callbackName;
-    document.head.appendChild(script);
+    }
   }
 
   loadLists();
@@ -508,7 +502,7 @@
   }
 
   // ============================
-  // Submit (بدون أي مهلة زمنية مصطنعة — الزرار بيفضل معطل وبينتظر الرد الحقيقي من السيرفر مهما طال، وبيظهر رسالة الخطأ بس لو فعلاً في مشكلة اتصال حقيقية)
+  // Submit عن طريق fetch() عادي (بدل الـ JSONP القديمة اللي كانت مش مضمونة على متصفحات الموبايل)
   // ============================
   function showSubmitError() {
     document.getElementById('formContainer').classList.add('hidden');
@@ -522,7 +516,46 @@
     document.getElementById('userCode').innerText = 'البريد الإلكتروني غير صحيح أو ممتلئ\nThe email address is invalid or full\n\nتواصل معنا: efb.volunteer@gmail.com';
   }
 
-  document.getElementById('volunteerForm').onsubmit = function(e) {
+  function handleSubmitResult(res) {
+    document.getElementById('formContainer').classList.add('hidden');
+    document.getElementById('successMessage').classList.remove('hidden');
+
+    if (res.code && res.code.toString().startsWith('EXISTING:')) {
+      var existingCode = res.code.toString().replace('EXISTING:', '');
+      document.getElementById('statusTitle').style.color = '#FFD700';
+      document.getElementById('statusTitle').style.fontWeight = 'bold';
+      document.getElementById('statusTitle').innerText = 'لقد قمت بالتسجيل من قبل';
+      document.getElementById('statusSubText').style.color = '#ffffff';
+      document.getElementById('statusSubText').style.fontWeight = 'bold';
+      document.getElementById('statusSubText').innerText = 'Your ID | كود التطوع الخاص بك:';
+      document.getElementById('userCode').style.color = '#FFD700';
+      document.getElementById('userCode').style.borderColor = '#FFD700';
+      document.getElementById('userCode').innerText = existingCode;
+    } else if (res.error) {
+      document.getElementById('statusTitle').style.color = '#ff4d4d';
+      document.getElementById('statusTitle').innerText = 'فشل التسجيل | Error';
+      document.getElementById('statusSubText').innerText = '';
+      document.getElementById('userCode').style.borderColor = '#ff4d4d';
+      document.getElementById('userCode').style.color = '#ff4d4d';
+      document.getElementById('userCode').innerText = 'حصل خطأ، حاول تاني أو تواصل معنا';
+    } else {
+      document.getElementById('statusTitle').innerText = 'Success | تم التسجيل بنجاح';
+      document.getElementById('userCode').innerText = res.code;
+      if (res.qrUrl) {
+        var qrImg = document.getElementById('userQr');
+        qrImg.src = res.qrUrl;
+        qrImg.style.display = 'block';
+        document.getElementById('qrLabel').style.display = 'block';
+        document.getElementById('downloadQrBtn').style.display = 'inline-block';
+      }
+      if (res.whatsappLink) {
+        document.getElementById('whatsappBtn').href = res.whatsappLink;
+        document.getElementById('whatsappWrapper').style.display = 'flex';
+      }
+    }
+  }
+
+  document.getElementById('volunteerForm').onsubmit = async function(e) {
     e.preventDefault();
     const btn = document.getElementById('submitBtn');
     btn.disabled = true;
@@ -534,60 +567,19 @@
       data[wrapper.dataset.name] = wrapper.dataset.value || "";
     });
 
-    const callbackName = "efbCallback_" + Date.now();
-    const script = document.createElement('script');
-
-    window[callbackName] = function(res) {
-      delete window[callbackName];
-      if (document.head.contains(script)) document.head.removeChild(script);
-      document.getElementById('formContainer').classList.add('hidden');
-      document.getElementById('successMessage').classList.remove('hidden');
-
-      if (res.code && res.code.toString().startsWith('EXISTING:')) {
-        var existingCode = res.code.toString().replace('EXISTING:', '');
-        document.getElementById('statusTitle').style.color = '#FFD700';
-        document.getElementById('statusTitle').style.fontWeight = 'bold';
-        document.getElementById('statusTitle').innerText = 'لقد قمت بالتسجيل من قبل';
-        document.getElementById('statusSubText').style.color = '#ffffff';
-        document.getElementById('statusSubText').style.fontWeight = 'bold';
-        document.getElementById('statusSubText').innerText = 'Your ID | كود التطوع الخاص بك:';
-        document.getElementById('userCode').style.color = '#FFD700';
-        document.getElementById('userCode').style.borderColor = '#FFD700';
-        document.getElementById('userCode').innerText = existingCode;
-      } else if (res.error) {
-        document.getElementById('statusTitle').style.color = '#ff4d4d';
-        document.getElementById('statusTitle').innerText = 'فشل التسجيل | Error';
-        document.getElementById('statusSubText').innerText = '';
-        document.getElementById('userCode').style.borderColor = '#ff4d4d';
-        document.getElementById('userCode').style.color = '#ff4d4d';
-        document.getElementById('userCode').innerText = 'حصل خطأ، حاول تاني أو تواصل معنا';
-      } else {
-        document.getElementById('statusTitle').innerText = 'Success | تم التسجيل بنجاح';
-        document.getElementById('userCode').innerText = res.code;
-        if (res.qrUrl) {
-          var qrImg = document.getElementById('userQr');
-          qrImg.src = res.qrUrl;
-          qrImg.style.display = 'block';
-          document.getElementById('qrLabel').style.display = 'block';
-          document.getElementById('downloadQrBtn').style.display = 'inline-block';
-        }
-        if (res.whatsappLink) {
-          document.getElementById('whatsappBtn').href = res.whatsappLink;
-          document.getElementById('whatsappWrapper').style.display = 'flex';
-        }
-      }
-    };
-
-    script.onerror = function() {
-      delete window[callbackName];
-      if (document.head.contains(script)) document.head.removeChild(script);
+    try {
+      const res = await fetch(SCRIPT_URL, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify(data)
+      });
+      const result = await res.json();
+      handleSubmitResult(result);
+    } catch (err) {
       showSubmitError();
       btn.disabled = false;
       btn.innerText = "تسجيل | Submit";
-    };
-
-    script.src = SCRIPT_URL + "?" + new URLSearchParams(data).toString() + "&callback=" + callbackName;
-    document.head.appendChild(script);
+    }
   };
 
   // ============================
