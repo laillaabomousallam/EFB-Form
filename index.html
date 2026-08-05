@@ -351,6 +351,8 @@
       }, 15000);
       if (!res.ok) throw new Error("HTTP " + res.status);
       const data = await res.json();
+      if (data && data.error) throw new Error(data.error);
+      if (!data || !data["Volunteer Program"] || !data["Volunteer Program"].length) throw new Error("Empty lists response");
       formLists = data;
       fillProgramList();
       hideListsError();
