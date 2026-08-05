@@ -441,7 +441,7 @@
       panel.appendChild(opt);
     });
     ddBuildOptions(wrapper);
-    ddSetValue(wrapper, '', '');
+    ddSetValue(wrapper, '', emptyLabel || 'Select | اختر');
   }
 
   document.querySelectorAll('.dd-wrapper').forEach(function(wrapper) {
@@ -543,16 +543,17 @@
   // ============================
   // Submit عن طريق fetch() عادي (بدل الـ JSONP القديمة اللي كانت مش مضمونة على متصفحات الموبايل)
   // ============================
-  function showSubmitError() {
+  function showSubmitError(message) {
     document.getElementById('formContainer').classList.add('hidden');
     document.getElementById('successMessage').classList.remove('hidden');
     document.getElementById('statusTitle').style.color = '#ff4d4d';
-    document.getElementById('statusTitle').innerText = 'فشل الإرسال | Delivery Failed';
-    document.getElementById('statusSubText').innerText = '';
+    document.getElementById('statusTitle').innerText = 'فشل الاتصال بالسيرفر | Connection Failed';
+    document.getElementById('statusSubText').style.color = '#ccc';
+    document.getElementById('statusSubText').innerText = 'تأكد من اتصالك بالإنترنت وحاول مرة أخرى، أو تواصل معنا:';
     document.getElementById('userCode').style.borderColor = '#ff4d4d';
     document.getElementById('userCode').style.color = '#ff4d4d';
     document.getElementById('userCode').style.fontSize = '14px';
-    document.getElementById('userCode').innerText = 'البريد الإلكتروني غير صحيح أو ممتلئ\nThe email address is invalid or full\n\nتواصل معنا: efb.volunteer@gmail.com';
+    document.getElementById('userCode').innerText = 'efb.volunteer@gmail.com\n+201022335917' + (message ? '\n\n(' + message + ')' : '');
   }
 
   function handleSubmitResult(res) {
@@ -612,10 +613,11 @@
         headers: { "Content-Type": "text/plain;charset=utf-8" },
         body: JSON.stringify(data)
       });
+      if (!res.ok) throw new Error("HTTP " + res.status);
       const result = await res.json();
       handleSubmitResult(result);
     } catch (err) {
-      showSubmitError();
+      showSubmitError(err && err.message ? err.message : String(err));
       btn.disabled = false;
       btn.innerText = "تسجيل | Submit";
     }
