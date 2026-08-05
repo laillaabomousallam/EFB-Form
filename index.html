@@ -327,20 +327,13 @@
   var formLists = {};
 
   // ============================
-  // تحميل القوائم مع retry
+  // تحميل القوائم (بدون أي مهلة زمنية مصطنعة — بينتظر الرد الحقيقي من السيرفر مهما طال، ويعيد المحاولة فقط لو حصل خطأ شبكة فعلي)
   // ============================
   function loadLists() {
     var callbackName = "listsCallback_" + Date.now();
     var script = document.createElement('script');
 
-    var timeout = setTimeout(function() {
-      delete window[callbackName];
-      if (document.head.contains(script)) document.head.removeChild(script);
-      setTimeout(loadLists, 3000);
-    }, 12000);
-
     window[callbackName] = function(data) {
-      clearTimeout(timeout);
       formLists = data;
       delete window[callbackName];
       if (document.head.contains(script)) document.head.removeChild(script);
@@ -348,7 +341,6 @@
     };
 
     script.onerror = function() {
-      clearTimeout(timeout);
       delete window[callbackName];
       if (document.head.contains(script)) document.head.removeChild(script);
       setTimeout(loadLists, 3000);
@@ -516,7 +508,7 @@
   }
 
   // ============================
-  // Submit مع timeout
+  // Submit (بدون أي مهلة زمنية مصطنعة — الزرار بيفضل معطل وبينتظر الرد الحقيقي من السيرفر مهما طال، وبيظهر رسالة الخطأ بس لو فعلاً في مشكلة اتصال حقيقية)
   // ============================
   function showSubmitError() {
     document.getElementById('formContainer').classList.add('hidden');
@@ -545,16 +537,7 @@
     const callbackName = "efbCallback_" + Date.now();
     const script = document.createElement('script');
 
-    var submitTimeout = setTimeout(function() {
-      delete window[callbackName];
-      if (document.head.contains(script)) document.head.removeChild(script);
-      showSubmitError();
-      btn.disabled = false;
-      btn.innerText = "تسجيل | Submit";
-    }, 30000);
-
     window[callbackName] = function(res) {
-      clearTimeout(submitTimeout);
       delete window[callbackName];
       if (document.head.contains(script)) document.head.removeChild(script);
       document.getElementById('formContainer').classList.add('hidden');
@@ -596,8 +579,8 @@
     };
 
     script.onerror = function() {
-      clearTimeout(submitTimeout);
       delete window[callbackName];
+      if (document.head.contains(script)) document.head.removeChild(script);
       showSubmitError();
       btn.disabled = false;
       btn.innerText = "تسجيل | Submit";
