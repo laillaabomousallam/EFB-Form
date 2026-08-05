@@ -583,6 +583,13 @@
       document.getElementById('userCode').style.color = '#FFD700';
       document.getElementById('userCode').style.borderColor = '#FFD700';
       document.getElementById('userCode').innerText = existingCode;
+      if (res.qrUrl) {
+        var qrImgExisting = document.getElementById('userQr');
+        qrImgExisting.src = res.qrUrl;
+        qrImgExisting.style.display = 'block';
+        document.getElementById('qrLabel').style.display = 'block';
+        document.getElementById('downloadQrBtn').style.display = 'inline-block';
+      }
     } else if (res.error) {
       document.getElementById('statusTitle').style.color = '#ff4d4d';
       document.getElementById('statusTitle').innerText = 'فشل التسجيل | Error';
